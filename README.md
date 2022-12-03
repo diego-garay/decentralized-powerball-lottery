@@ -11,7 +11,7 @@ A decentralized powerball lottery built with Solidity and automated through the 
 ## Quickstart
 
 ```
-git clone [https://github.com/diego-garay/decentralized-powerball-lottery](https://github.com/diego-garay/decentralized-powerball-lottery)
+git clone https://github.com/diego-garay/decentralized-powerball-lottery
 cd decentralized-powerball-lottery
 yarn
 ```
