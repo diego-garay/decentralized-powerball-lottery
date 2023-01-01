@@ -110,15 +110,7 @@ contract Powerball is VRFConsumerBaseV2, KeeperCompatibleInterface {
 
     function checkUpkeep(
         bytes memory /* checkData */
-    )
-        public
-        view
-        override
-        returns (
-            bool upkeepNeeded,
-            bytes memory /* performData */
-        )
-    {
+    ) public view override returns (bool upkeepNeeded, bytes memory /* performData */) {
         bool isOpen = (PowerballState.OPEN == s_powerballState);
         bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
         bool hasPlayers = s_players.length > 0;
@@ -126,9 +118,7 @@ contract Powerball is VRFConsumerBaseV2, KeeperCompatibleInterface {
         upkeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
     }
 
-    function performUpkeep(
-        bytes calldata /*performData */
-    ) external override {
+    function performUpkeep(bytes calldata /*performData */) external override {
         (bool upkeepNeeded, ) = checkUpkeep("");
 
         if (!upkeepNeeded) {
@@ -152,7 +142,7 @@ contract Powerball is VRFConsumerBaseV2, KeeperCompatibleInterface {
     }
 
     function fulfillRandomWords(
-        uint256, /* requestId */
+        uint256 /* requestId */,
         uint256[] memory randomWords
     ) internal override {
         uint256 winningNumberOne = 1; // randomWords[0] % s_players.length;
@@ -181,7 +171,7 @@ contract Powerball is VRFConsumerBaseV2, KeeperCompatibleInterface {
 
         if (s_recentWinners.length != 0) {
             uint256 winnings = address(this).balance / s_recentWinners.length;
-
+            delete s_lastNumbers;
             for (uint256 i = 0; i < s_recentWinners.length; i++) {
                 address recentWinner = payable(s_recentWinners[i]);
                 (bool success, ) = recentWinner.call{value: winnings}("");
